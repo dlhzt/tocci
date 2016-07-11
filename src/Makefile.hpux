@@ -1,0 +1,46 @@
+#sample makefile for **nix/oracle
+
+CXX      = aCC
+OBJS     = anydata.o connection.o enviroment.o falone.o metadata.o \
+           pobject.o resultset.o sqlex.o statement.o
+INCLUDE  = -I$(ORACLE_HOME)/rdbms/demo -I$(ORACLE_HOME)/rdbms/public -I..
+CXXFLAGS = -g -AA -D_REENTRANT $(INCLUDE)
+LINK     = ar 
+LFLAGS   = -rv
+LIBS     = -L$(ORACLE_HOME)/lib -L. -lclntsh
+TARGET   = libtocci.a
+TESTS    = test
+
+
+all: $(TARGET) $(TESTS)
+
+test: test.o
+	$(CXX) $(CXXFLAGS) $(LIBS) -ltocci -lclntsh -o test test.o
+test.o: test.cpp
+	$(CXX) $(CXXFLAGS) -c -o test.o test.cpp
+	
+anydata.o : anydata.cpp
+	$(CXX) $(CXXFLAGS) -c -o anydata.o anydata.cpp
+connection.o : connection.cpp
+	$(CXX) $(CXXFLAGS) -c -o connection.o connection.cpp
+enviroment.o : enviroment.cpp
+	$(CXX) $(CXXFLAGS) -c -o enviroment.o enviroment.cpp
+falone.o : falone.cpp
+	$(CXX) $(CXXFLAGS) -c -o falone.o falone.cpp
+metadata.o : metadata.cpp
+	$(CXX) $(CXXFLAGS) -c -o metadata.o metadata.cpp
+pobject.o : pobject.cpp
+	$(CXX) $(CXXFLAGS) -c -o pobject.o pobject.cpp
+resultset.o : resultset.cpp
+	$(CXX) $(CXXFLAGS) -c -o resultset.o resultset.cpp
+sqlex.o : sqlex.cpp
+	$(CXX) $(CXXFLAGS) -c -o sqlex.o sqlex.cpp
+statement.o: statement.cpp
+	$(CXX) $(CXXFLAGS) -c -o statement.o statement.cpp
+
+$(TARGET): $(OBJS)
+	$(LINK) $(LFLAGS) $(TARGET) $(OBJS)
+
+
+clean:
+	rm *.o *.so $(TESTS)
